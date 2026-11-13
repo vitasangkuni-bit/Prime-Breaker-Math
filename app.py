@@ -1,59 +1,73 @@
 import random
 import streamlit as st
 
-# 1. Konfigurasi Halaman
+# 1. Konfigurasi Halaman & Judul Aplikasi Game
 st.set_page_config(
-    page_title="Prime Breaker: The Sieve Protocol", page_icon="🔐", layout="centered"
+    page_title="Prime Breaker: The Sieve Protocol",
+    page_icon="🔐",
+    layout="centered",
+    initial_sidebar_state="expanded",
 )
 
-# 2. Desain Visual Kustom & Animasi Latar Cyber
+# 2. Desain Visual Kustom, Sembunyikan Menu Streamlit, & Animasi Cyber Grid
 st.markdown(
     """
     <style>
-    /* Animasi Latar Belakang Cyberpunk yang Lebih Dinamis */
+    /* Sembunyikan Header, Footer, dan Menu Bawaan Streamlit agar Murni seperti Game */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    
+    /* Animasi Latar Belakang Cyber Grid & Berdenyut */
     @keyframes cyberPulse {
-        0% { background-color: #050814; }
-        50% { background-color: #111e38; }
-        100% { background-color: #050814; }
+        0% { background-color: #030712; }
+        50% { background-color: #0f172a; }
+        100% { background-color: #030712; }
     }
     
     .stApp {
+        background-color: #030712;
+        background-image: 
+            linear-gradient(rgba(0, 240, 255, 0.04) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 240, 255, 0.04) 1px, transparent 1px);
+        background-size: 35px 35px;
         animation: cyberPulse 6s infinite ease-in-out;
-        color: #e2e8f0;
+        color: #f8fafc;
     }
 
-    /* Kotak Cyber dengan Efek Glow Neon */
+    /* Kotak Game ala Terminal Hacker dengan Efek Neon Glow */
     .cyber-box {
-        background-color: rgba(15, 23, 42, 0.9);
+        background-color: rgba(15, 23, 42, 0.92);
         border: 2px solid #00f0ff;
-        border-radius: 12px;
-        padding: 20px;
+        border-radius: 14px;
+        padding: 25px;
         margin-bottom: 20px;
-        box-shadow: 0 0 25px rgba(0, 240, 255, 0.3);
+        box-shadow: 0 0 30px rgba(0, 240, 255, 0.25);
     }
 
     .cyber-title {
         color: #00f0ff;
         font-family: 'Courier New', monospace;
         font-weight: bold;
-        text-shadow: 0 0 12px rgba(0, 240, 255, 0.6);
+        text-shadow: 0 0 15px rgba(0, 240, 255, 0.7);
+        letter-spacing: 1px;
     }
 
     div.stButton > button {
         background-color: #00f0ff;
-        color: #050814;
+        color: #030712;
         font-weight: bold;
         border-radius: 8px;
         border: none;
-        padding: 10px 20px;
+        padding: 12px 24px;
         width: 100%;
-        box-shadow: 0 0 12px rgba(0, 240, 255, 0.4);
+        box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
         transition: 0.3s;
     }
     div.stButton > button:hover {
         background-color: #00b8cc;
         color: #ffffff;
-        box-shadow: 0 0 20px rgba(0, 240, 255, 0.8);
+        box-shadow: 0 0 25px rgba(0, 240, 255, 0.9);
     }
     </style>
 """,
@@ -103,54 +117,60 @@ def reset_game():
   st.session_state.mod_b = random.randint(5, 20)
 
 
-# --- HEADER GAME & BACKSOUND PLAYER ---
+# --- HEADER APLIKASI GAME & BACKSOUND DI SIDEBAR ---
 st.markdown(
     "<h1 class='cyber-title'>🔐 PRIME BREAKER: THE SIEVE PROTOCOL</h1>",
     unsafe_allow_html=True,
 )
-st.caption(
-    "Protokol Keamanan Teori Bilangan | Pecahkan Kode & Selamatkan Sistem"
-)
+st.caption("Aplikasi Protokol Keamanan Teori Bilangan v1.0")
 
-# Pemutar Audio Musik Latar (Dilengkapi kontrol play supaya tidak diblokir browser)
+# Pemutar Musik Latar Belakang (Backsound)
+st.sidebar.markdown("### 🎮 PUSAT KONTROL")
 st.sidebar.markdown("🎵 **Cyberpunk Backsound**")
 st.sidebar.audio(
     "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf756.mp3?filename=cyberpunk-2099-10701.mp3",
     format="audio/mp3",
     autoplay=True,
 )
+st.sidebar.markdown("---")
+st.sidebar.info(
+    "💡 **Tips:** Nyalakan musik dan mainkan dalam mode layar penuh (`F11` di"
+    " keyboard) agar terasa seperti game PC sungguhan!"
+)
 
-# --- PANEL STATUS ---
+# --- PANEL STATUS GAME ---
 if 1 <= st.session_state.level <= 3:
   col1, col2 = st.columns(2)
   col1.metric("🛡️ Level Aktif", f"Level {st.session_state.level} / 3")
-  col2.metric("⭐ Skor Sementara", f"{st.session_state.score} / 100 Poin")
+  col2.metric("⭐ Skor Akumulasi", f"{st.session_state.score} / 100 Poin")
   st.progress(st.session_state.level / 3)
   st.markdown("---")
 
 # ==========================================
-# LAYAR 0: LOGIN AGEN
+# LAYAR 0: LOGIN AGEN (MENU UTAMA)
 # ==========================================
 if st.session_state.level == 0:
   st.markdown(
       """
     <div class='cyber-box'>
-        <h3>⚠️ ATURAN PROTOKOL KEAMANAN</h3>
-        <p>Jaringan utama terkunci. Jika kamu <b>salah menjawab satu soal pun</b>, sistem akan mengunci total dan kamu harus <b>mengulang dari Level 1</b>!</p>
-        <p><i>Nyalakan musik latar di sidebar kiri untuk pengalaman hacking yang maksimal!</i></p>
+        <h3>⚠️ PROTOKOL KEAMANAN DIAKTIFKAN</h3>
+        <p>Jaringan utama terkunci oleh enkripsi tingkat tinggi. Untuk masuk ke dalam sistem, kamu harus melewati 3 level tantangan matematika.</p>
+        <p style='color: #00f0ff;'><b>Aturan Main:</b> Jika kamu <b>salah menjawab satu soal pun</b>, sistem akan terkunci total dan kamu wajib <b>mengulang dari Level 1</b>!</p>
     </div>
     """,
       unsafe_allow_html=True,
   )
 
-  nama_input = st.text_input("Masukkan Nama Agen:", placeholder="Contoh: Vita")
-  if st.button("🚀 MULAI MISI"):
+  nama_input = st.text_input(
+      "Identifikasi Nama Agen:", placeholder="Ketik nama kamu di sini..."
+  )
+  if st.button("🚀 INISIASI MASUK SISTEM"):
     if nama_input.strip() != "":
       st.session_state.nama = nama_input
       st.session_state.level = 1
       st.rerun()
     else:
-      st.warning("Masukkan nama agen terlebih dahulu!")
+      st.warning("Nama agen wajib diisi untuk mengakses protokol!")
 
 # ==========================================
 # LEVEL 1: FIREWALL BILANGAN PRIMA (3 Soal x 10 Poin = 30 Poin)
@@ -160,7 +180,7 @@ elif st.session_state.level == 1:
       f"""
     <div class='cyber-box'>
         <h3 class='cyber-title'>[LEVEL 1] Sieve Firewall — Soal {st.session_state.sub_soal} dari 3</h3>
-        <p>Sistem mendeteksi sinyal angka: <strong style='font-size: 24px; color: #00f0ff;'>{st.session_state.num_prima}</strong></p>
+        <p>Sistem mendeteksi sinyal angka: <strong style='font-size: 26px; color: #00f0ff;'>{st.session_state.num_prima}</strong></p>
         <p>Apakah angka tersebut termasuk <strong>Bilangan Prima</strong>?</p>
     </div>
     """,
@@ -204,14 +224,14 @@ elif st.session_state.level == 2:
     <div class='cyber-box'>
         <h3 class='cyber-title'>[LEVEL 2] Enkripsi Euclidean (FPB) — Soal {st.session_state.sub_soal} dari 2</h3>
         <p>Temukan <strong>Faktor Persekutuan Terbesar (FPB)</strong> dari dua kunci berikut:</p>
-        <p style='font-size: 24px; color: #00f0ff;'><strong>{st.session_state.fpb_a}</strong> dan <strong>{st.session_state.fpb_b}</strong></p>
+        <p style='font-size: 26px; color: #00f0ff;'><strong>{st.session_state.fpb_a}</strong> dan <strong>{st.session_state.fpb_b}</strong></p>
     </div>
     """,
       unsafe_allow_html=True,
   )
 
   ans_fpb = st.number_input("Masukkan nilai FPB:", min_value=1, step=1)
-  if st.button("🔑 Buka Gerbang FPB"):
+  if st.button("🔑 DEKRIPSI GERBANG FPB"):
     real_fpb = cari_fpb(st.session_state.fpb_a, st.session_state.fpb_b)
     if ans_fpb == real_fpb:
       st.session_state.score += 20
@@ -239,9 +259,9 @@ elif st.session_state.level == 3:
       f"""
     <div class='cyber-box'>
         <h3 class='cyber-title'>[LEVEL 3] Brankas Akhir — Aritmatika Modulo</h3>
-        <p>Hitung sisa pembagian terakhir untuk meretas brankas utama:</p>
-        <p style='font-size: 26px; color: #00f0ff;'><strong>{st.session_state.mod_a} mod {st.session_state.mod_b}</strong></p>
-        <small>(Sisa pembagian {st.session_state.mod_a} dibagi {st.session_state.mod_b})</small>
+        <p>Selesaikan sisa pembagian terakhir untuk meretas brankas utama:</p>
+        <p style='font-size: 28px; color: #00f0ff;'><strong>{st.session_state.mod_a} mod {st.session_state.mod_b}</strong></p>
+        <small>(Sisa pembagian dari {st.session_state.mod_a} dibagi {st.session_state.mod_b})</small>
     </div>
     """,
       unsafe_allow_html=True,
@@ -271,14 +291,14 @@ elif st.session_state.level == 4:
       f"""
     <div class='cyber-box' style='border-color: #00ff88;'>
         <h2 style='color: #00ff88;'>🏆 MISI BERHASIL, AGEN {st.session_state.nama.upper()}!</h2>
-        <p>Tanpa satu pun kesalahan, kamu berhasil menembus seluruh protokol keamanan!</p>
-        <h3>Total Skor Sempurna: {st.session_state.score} / 100 Poin</h3>
+        <p>Luar biasa! Kamu berhasil menembus seluruh lapisan enkripsi dan menyelamatkan sistem dari konspirasi angka.</p>
+        <h3 style='color: #00ff88;'>Total Skor Sempurna: {st.session_state.score} / 100 Poin</h3>
     </div>
     """,
       unsafe_allow_html=True,
   )
 
-  if st.button("🔄 Mainkan Lagi"):
+  if st.button("🔄 Mainkan Misi Baru"):
     reset_game()
     st.rerun()
 
@@ -289,10 +309,10 @@ elif st.session_state.level == 5:
   st.markdown(
       f"""
     <div class='cyber-box' style='border-color: #ff4b4b;'>
-        <h2 style='color: #ff4b4b;'>🚨 SISTEM MENGUNCI: JAWABAN SALAH!</h2>
-        <p>Maaf Agen <b>{st.session_state.nama}</b>, analismu keliru.</p>
+        <h2 style='color: #ff4b4b;'>🚨 PERINGATAN: SISTEM MENGUNCI OTOMATIS!</h2>
+        <p>Analisis keliru terdeteksi untuk Agen <b>{st.session_state.nama}</b>.</p>
         <p><i>{st.session_state.pesan}</i></p>
-        <p style='color: #ff4b4b; margin-top: 15px;'><b>Konsekuensi: Protokol gagal. Kamu harus mengulang misi dari awal!</b></p>
+        <p style='color: #ff4b4b; margin-top: 15px;'><b>Konsekuensi: Jaringan mendeteksi intrusi. Seluruh progres direset, silakan ulang dari Level 1!</b></p>
     </div>
     """,
       unsafe_allow_html=True,
