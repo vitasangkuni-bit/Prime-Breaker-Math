@@ -6,31 +6,39 @@ st.set_page_config(
     page_title="Prime Breaker: The Sieve Protocol", page_icon="🔐", layout="centered"
 )
 
-# 2. Desain Visual Kustom (Tema Hacker / Cyber)
+# 2. Desain Visual Kustom, Animasi Latar, & Backsound
 st.markdown(
     """
     <style>
+    /* Animasi Latar Belakang Gradasi Berdenyut (Cyberpunk Theme) */
+    @keyframes cyberPulse {
+        0% { background-color: #0b0f19; }
+        50% { background-color: #121829; }
+        100% { background-color: #0b0f19; }
+    }
+    
     .stApp {
-        background-color: #0b0f19;
+        animation: cyberPulse 8s infinite ease-in-out;
         color: #e2e8f0;
     }
+
+    /* Kotak Cyber dengan Efek Glow */
     .cyber-box {
-        background-color: #131b2e;
+        background-color: rgba(19, 27, 46, 0.85);
         border: 1px solid #00f0ff;
         border-radius: 12px;
         padding: 20px;
         margin-bottom: 20px;
-        box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
-    .cyber-error {
-        border-color: #ff4b4b;
-        box-shadow: 0 0 15px rgba(255, 75, 75, 0.15);
+        box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
     }
-    }
+
     .cyber-title {
         color: #00f0ff;
         font-family: 'Courier New', monospace;
         font-weight: bold;
+        text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
     }
+
     div.stButton > button {
         background-color: #00f0ff;
         color: #0b0f19;
@@ -39,12 +47,22 @@ st.markdown(
         border: none;
         padding: 10px 20px;
         width: 100%;
+        box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+        transition: 0.3s;
     }
     div.stButton > button:hover {
         background-color: #00b8cc;
         color: #ffffff;
+        box-shadow: 0 0 15px rgba(0, 240, 255, 0.6);
     }
     </style>
+
+    <!-- BACKSOUND AUDIO (Musik Latar Otomatis) -->
+    <!-- Kamu bisa mengganti link audio di bawah dengan link musik pilihanmu -->
+    <audio autoplay loop>
+        <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf756.mp3?filename=cyberpunk-2099-10701.mp3" type="audio/mp3">
+        Browser kamu tidak mendukung pemutar audio.
+    </audio>
 """,
     unsafe_allow_html=True,
 )
@@ -68,11 +86,10 @@ def cari_fpb(a, b):
 
 # 4. Inisialisasi Memori Game (Session State)
 if "level" not in st.session_state:
-  st.session_state.level = 0  # 0 = Login, 1-3 = Level, 4 = Menang, 5 = Kalah (Reset)
+  st.session_state.level = 0  # 0 = Login, 1-3 = Level, 4 = Menang, 5 = Kalah
   st.session_state.score = 0
   st.session_state.nama = ""
   st.session_state.sub_soal = 1
-  # Soal awal
   st.session_state.num_prima = random.randint(2, 50)
   st.session_state.fpb_a = random.randint(12, 48)
   st.session_state.fpb_b = random.randint(12, 48)
@@ -102,7 +119,7 @@ st.caption(
     "Protokol Keamanan Teori Bilangan | Pecahkan Kode & Selamatkan Sistem"
 )
 
-# --- PANEL STATUS (SKOR & PROGRESS) ---
+# --- PANEL STATUS ---
 if 1 <= st.session_state.level <= 3:
   col1, col2 = st.columns(2)
   col1.metric("🛡️ Level Aktif", f"Level {st.session_state.level} / 3")
@@ -169,7 +186,6 @@ elif st.session_state.level == 1:
         st.session_state.sub_soal = 1
       st.rerun()
     else:
-      # SALAH JAWAB -> Langsung masuk ke layar gagal (Level 5)
       st.session_state.level = 5
       st.session_state.pesan = (
           f"Angka {st.session_state.num_prima} sebenarnya adalah"
@@ -206,7 +222,6 @@ elif st.session_state.level == 2:
         st.session_state.sub_soal = 1
       st.rerun()
     else:
-      # SALAH JAWAB -> Langsung gagal & reset
       st.session_state.level = 5
       st.session_state.pesan = (
           f"FPB yang benar dari {st.session_state.fpb_a} dan"
@@ -235,10 +250,9 @@ elif st.session_state.level == 3:
     real_mod = st.session_state.mod_a % st.session_state.mod_b
     if ans_mod == real_mod:
       st.session_state.score += 25
-      st.session_state.level = 4  # Menang
+      st.session_state.level = 4
       st.rerun()
     else:
-      # SALAH JAWAB -> Gagal & reset
       st.session_state.level = 5
       st.session_state.pesan = (
           f"Sisa pembagian {st.session_state.mod_a} dibagi"
