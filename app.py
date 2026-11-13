@@ -6,63 +6,56 @@ st.set_page_config(
     page_title="Prime Breaker: The Sieve Protocol", page_icon="🔐", layout="centered"
 )
 
-# 2. Desain Visual Kustom, Animasi Latar, & Backsound
+# 2. Desain Visual Kustom & Animasi Latar Cyber
 st.markdown(
     """
     <style>
-    /* Animasi Latar Belakang Gradasi Berdenyut (Cyberpunk Theme) */
+    /* Animasi Latar Belakang Cyberpunk yang Lebih Dinamis */
     @keyframes cyberPulse {
-        0% { background-color: #0b0f19; }
-        50% { background-color: #121829; }
-        100% { background-color: #0b0f19; }
+        0% { background-color: #050814; }
+        50% { background-color: #111e38; }
+        100% { background-color: #050814; }
     }
     
     .stApp {
-        animation: cyberPulse 8s infinite ease-in-out;
+        animation: cyberPulse 6s infinite ease-in-out;
         color: #e2e8f0;
     }
 
-    /* Kotak Cyber dengan Efek Glow */
+    /* Kotak Cyber dengan Efek Glow Neon */
     .cyber-box {
-        background-color: rgba(19, 27, 46, 0.85);
-        border: 1px solid #00f0ff;
+        background-color: rgba(15, 23, 42, 0.9);
+        border: 2px solid #00f0ff;
         border-radius: 12px;
         padding: 20px;
         margin-bottom: 20px;
-        box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+        box-shadow: 0 0 25px rgba(0, 240, 255, 0.3);
     }
 
     .cyber-title {
         color: #00f0ff;
         font-family: 'Courier New', monospace;
         font-weight: bold;
-        text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+        text-shadow: 0 0 12px rgba(0, 240, 255, 0.6);
     }
 
     div.stButton > button {
         background-color: #00f0ff;
-        color: #0b0f19;
+        color: #050814;
         font-weight: bold;
         border-radius: 8px;
         border: none;
         padding: 10px 20px;
         width: 100%;
-        box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+        box-shadow: 0 0 12px rgba(0, 240, 255, 0.4);
         transition: 0.3s;
     }
     div.stButton > button:hover {
         background-color: #00b8cc;
         color: #ffffff;
-        box-shadow: 0 0 15px rgba(0, 240, 255, 0.6);
+        box-shadow: 0 0 20px rgba(0, 240, 255, 0.8);
     }
     </style>
-
-    <!-- BACKSOUND AUDIO (Musik Latar Otomatis) -->
-    <!-- Kamu bisa mengganti link audio di bawah dengan link musik pilihanmu -->
-    <audio autoplay loop>
-        <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf756.mp3?filename=cyberpunk-2099-10701.mp3" type="audio/mp3">
-        Browser kamu tidak mendukung pemutar audio.
-    </audio>
 """,
     unsafe_allow_html=True,
 )
@@ -110,7 +103,7 @@ def reset_game():
   st.session_state.mod_b = random.randint(5, 20)
 
 
-# --- HEADER GAME ---
+# --- HEADER GAME & BACKSOUND PLAYER ---
 st.markdown(
     "<h1 class='cyber-title'>🔐 PRIME BREAKER: THE SIEVE PROTOCOL</h1>",
     unsafe_allow_html=True,
@@ -119,11 +112,19 @@ st.caption(
     "Protokol Keamanan Teori Bilangan | Pecahkan Kode & Selamatkan Sistem"
 )
 
+# Pemutar Audio Musik Latar (Dilengkapi kontrol play supaya tidak diblokir browser)
+st.sidebar.markdown("🎵 **Cyberpunk Backsound**")
+st.sidebar.audio(
+    "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf756.mp3?filename=cyberpunk-2099-10701.mp3",
+    format="audio/mp3",
+    autoplay=True,
+)
+
 # --- PANEL STATUS ---
 if 1 <= st.session_state.level <= 3:
   col1, col2 = st.columns(2)
   col1.metric("🛡️ Level Aktif", f"Level {st.session_state.level} / 3")
-  col2.metric("⭐ Skor Sementara", f"{st.session_state.score} Poin")
+  col2.metric("⭐ Skor Sementara", f"{st.session_state.score} / 100 Poin")
   st.progress(st.session_state.level / 3)
   st.markdown("---")
 
@@ -136,6 +137,7 @@ if st.session_state.level == 0:
     <div class='cyber-box'>
         <h3>⚠️ ATURAN PROTOKOL KEAMANAN</h3>
         <p>Jaringan utama terkunci. Jika kamu <b>salah menjawab satu soal pun</b>, sistem akan mengunci total dan kamu harus <b>mengulang dari Level 1</b>!</p>
+        <p><i>Nyalakan musik latar di sidebar kiri untuk pengalaman hacking yang maksimal!</i></p>
     </div>
     """,
       unsafe_allow_html=True,
@@ -151,7 +153,7 @@ if st.session_state.level == 0:
       st.warning("Masukkan nama agen terlebih dahulu!")
 
 # ==========================================
-# LEVEL 1: FIREWALL BILANGAN PRIMA (3 Soal)
+# LEVEL 1: FIREWALL BILANGAN PRIMA (3 Soal x 10 Poin = 30 Poin)
 # ==========================================
 elif st.session_state.level == 1:
   st.markdown(
@@ -194,7 +196,7 @@ elif st.session_state.level == 1:
       st.rerun()
 
 # ==========================================
-# LEVEL 2: ENKRIPSI FPB (2 Soal)
+# LEVEL 2: ENKRIPSI FPB (2 Soal x 20 Poin = 40 Poin)
 # ==========================================
 elif st.session_state.level == 2:
   st.markdown(
@@ -212,7 +214,7 @@ elif st.session_state.level == 2:
   if st.button("🔑 Buka Gerbang FPB"):
     real_fpb = cari_fpb(st.session_state.fpb_a, st.session_state.fpb_b)
     if ans_fpb == real_fpb:
-      st.session_state.score += 15
+      st.session_state.score += 20
       if st.session_state.sub_soal < 2:
         st.session_state.sub_soal += 1
         st.session_state.fpb_a = random.randint(12, 48)
@@ -230,7 +232,7 @@ elif st.session_state.level == 2:
       st.rerun()
 
 # ==========================================
-# LEVEL 3: BRANKAS AKHIR MODULO (1 Soal)
+# LEVEL 3: BRANKAS AKHIR MODULO (1 Soal = 30 Poin)
 # ==========================================
 elif st.session_state.level == 3:
   st.markdown(
@@ -249,7 +251,7 @@ elif st.session_state.level == 3:
   if st.button("💥 RETAS BRANKAS UTAMA"):
     real_mod = st.session_state.mod_a % st.session_state.mod_b
     if ans_mod == real_mod:
-      st.session_state.score += 25
+      st.session_state.score += 30
       st.session_state.level = 4
       st.rerun()
     else:
@@ -261,7 +263,7 @@ elif st.session_state.level == 3:
       st.rerun()
 
 # ==========================================
-# LAYAR 4: MENANG (VICTORY)
+# LAYAR 4: MENANG (VICTORY - SKOR 100)
 # ==========================================
 elif st.session_state.level == 4:
   st.balloons()
@@ -269,8 +271,8 @@ elif st.session_state.level == 4:
       f"""
     <div class='cyber-box' style='border-color: #00ff88;'>
         <h2 style='color: #00ff88;'>🏆 MISI BERHASIL, AGEN {st.session_state.nama.upper()}!</h2>
-        <p>Tanpa satu pun kesalahan, kamu berhasil menembus protokol keamanan dan menyelamatkan sistem!</p>
-        <h3>Total Skor Sempurna: {st.session_state.score} / 85 Poin</h3>
+        <p>Tanpa satu pun kesalahan, kamu berhasil menembus seluruh protokol keamanan!</p>
+        <h3>Total Skor Sempurna: {st.session_state.score} / 100 Poin</h3>
     </div>
     """,
       unsafe_allow_html=True,
