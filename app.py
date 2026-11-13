@@ -4,58 +4,63 @@ import streamlit as st
 # 1. Konfigurasi Halaman & Judul Aplikasi Game
 st.set_page_config(
     page_title="Prime Breaker: The Sieve Protocol",
-    page_icon="🔐",
+    page_icon="⚡",
     layout="centered",
     initial_sidebar_state="expanded",
 )
 
-# 2. Desain Visual Kustom, Sembunyikan Menu Streamlit, & Animasi Cyber Grid
+# 2. Desain Visual Kustom, Animasi Background Bergerak, & Sembunyikan Menu Streamlit
 st.markdown(
     """
     <style>
-    /* Sembunyikan Header, Footer, dan Menu Bawaan Streamlit agar Murni seperti Game */
+    /* Sembunyikan Header dan Footer Streamlit agar Murni seperti Game Desktop */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
     
-    /* Animasi Latar Belakang Cyber Grid & Berdenyut */
+    /* Animasi Grid Bergerak & Pulse Cyberpunk */
+    @keyframes cyberGrid {
+        0% { background-position: 0 0; }
+        100% { background-position: 50px 50px; }
+    }
+    
     @keyframes cyberPulse {
-        0% { background-color: #030712; }
+        0% { background-color: #020617; }
         50% { background-color: #0f172a; }
-        100% { background-color: #030712; }
+        100% { background-color: #020617; }
     }
     
     .stApp {
-        background-color: #030712;
+        background-color: #020617;
         background-image: 
-            linear-gradient(rgba(0, 240, 255, 0.04) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(0, 240, 255, 0.04) 1px, transparent 1px);
-        background-size: 35px 35px;
-        animation: cyberPulse 6s infinite ease-in-out;
+            linear-gradient(rgba(0, 240, 255, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 240, 255, 0.1) 1px, transparent 1px);
+        background-size: 45px 45px;
+        animation: cyberGrid 5s linear infinite, cyberPulse 7s infinite ease-in-out;
         color: #f8fafc;
     }
 
     /* Kotak Game ala Terminal Hacker dengan Efek Neon Glow */
     .cyber-box {
-        background-color: rgba(15, 23, 42, 0.92);
+        background-color: rgba(15, 23, 42, 0.94);
         border: 2px solid #00f0ff;
         border-radius: 14px;
         padding: 25px;
         margin-bottom: 20px;
-        box-shadow: 0 0 30px rgba(0, 240, 255, 0.25);
+        box-shadow: 0 0 35px rgba(0, 240, 255, 0.3);
     }
 
     .cyber-title {
         color: #00f0ff;
         font-family: 'Courier New', monospace;
         font-weight: bold;
-        text-shadow: 0 0 15px rgba(0, 240, 255, 0.7);
+        text-shadow: 0 0 20px rgba(0, 240, 255, 0.8);
         letter-spacing: 1px;
     }
 
     div.stButton > button {
         background-color: #00f0ff;
-        color: #030712;
+        color: #020617;
         font-weight: bold;
         border-radius: 8px;
         border: none;
@@ -70,6 +75,9 @@ st.markdown(
         box-shadow: 0 0 25px rgba(0, 240, 255, 0.9);
     }
     </style>
+
+    <!-- BACKSOUND OTOMATIS (Menggunakan pemutar audio stabil) -->
+    <iframe src="https://www.youtube.com/embed/4xDzrJKXOOY?autoplay=1&loop=1&playlist=4xDzrJKXOOY" width="0" height="0" style="display:none;" frameborder="0"></iframe>
 """,
     unsafe_allow_html=True,
 )
@@ -117,32 +125,29 @@ def reset_game():
   st.session_state.mod_b = random.randint(5, 20)
 
 
-# --- HEADER APLIKASI GAME & BACKSOUND DI SIDEBAR ---
+# --- HEADER APLIKASI GAME (Ikon diganti menjadi kombinasi siber yang menarik) ---
 st.markdown(
-    "<h1 class='cyber-title'>🔐 PRIME BREAKER: THE SIEVE PROTOCOL</h1>",
+    "<h1 class='cyber-title'>⚡ 💻 PRIME BREAKER: THE SIEVE PROTOCOL 🛡️</h1>",
     unsafe_allow_html=True,
 )
-st.caption("Aplikasi Protokol Keamanan Teori Bilangan v1.0")
-
-# Pemutar Musik Latar Belakang (Backsound)
-st.sidebar.markdown("### 🎮 PUSAT KONTROL")
-st.sidebar.markdown("🎵 **Cyberpunk Backsound**")
-st.sidebar.audio(
-    "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf756.mp3?filename=cyberpunk-2099-10701.mp3",
-    format="audio/mp3",
-    autoplay=True,
+st.caption(
+    "Sistem Keamanan Teori Bilangan v1.0 | Mode Hacking Interaktif Aktif"
 )
-st.sidebar.markdown("---")
+
+# Sidebar kontrol tambahan
+st.sidebar.markdown("### 🎮 PANEL KONTROL")
+st.sidebar.success("🎵 Backsound & Animasi: Aktif otomatis")
 st.sidebar.info(
-    "💡 **Tips:** Nyalakan musik dan mainkan dalam mode layar penuh (`F11` di"
-    " keyboard) agar terasa seperti game PC sungguhan!"
+    "💡 **Tips Presentasi:** Tekan tombol **F11** di keyboard agar tampilan web"
+    " berubah menjadi mode layar penuh (Full Screen) seperti game PC"
+    " sesungguhnya!"
 )
 
 # --- PANEL STATUS GAME ---
 if 1 <= st.session_state.level <= 3:
   col1, col2 = st.columns(2)
   col1.metric("🛡️ Level Aktif", f"Level {st.session_state.level} / 3")
-  col2.metric("⭐ Skor Akumulasi", f"{st.session_state.score} / 100 Poin")
+  col2.metric("⭐ Akumulasi Skor", f"{st.session_state.score} / 100 Poin")
   st.progress(st.session_state.level / 3)
   st.markdown("---")
 
